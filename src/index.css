@@ -3,4 +3,3 @@
 @import "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 @source "./**/*.{html,js,jsx,ts,tsx}";
-
