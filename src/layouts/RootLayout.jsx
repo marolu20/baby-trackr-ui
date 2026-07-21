@@ -1,20 +1,17 @@
+import { Outlet } from "react-router-dom";
 import { AppNavigationBar } from "../components/AppNavigationBar.jsx";
 import { AppSideBar } from "../components/AppSideBar";
-import DashboardGrid from "./DashboardGrid.jsx";
 
-function RootLayout({ children }) {
+function RootLayout() {
     return (
         <div className="flex h-screen">
             <AppSideBar />
-
                 <div className="flex flex-col flex-1">
                     <AppNavigationBar />
-                    <DashboardGrid />
 
                     <main className="flex-1 p-6 overflow-auto">
-                        { children }
+                        < Outlet />
                     </main>
-
                 </div>
         </div>
     );

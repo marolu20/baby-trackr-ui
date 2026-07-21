@@ -5,12 +5,19 @@ import {
 
 export function AppNavigationBar() {
     return (
-        <Navbar fluid rounded>
+        <Navbar fluid className="bg-white shadow-sm">
             <NavbarBrand>
-                <img src="/favicon.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
-                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">BabyTrackr App</span>
+                <div className="flex items-center gap-3">
+                    <div className="rounded-lg bg-blue-100 p-2">
+                        🍼
+                    </div>
+                    <span className="text-xl font-bold text-gray-800">
+                BabyTrackr
+            </span>
+                </div>
             </NavbarBrand>
         </Navbar>
+
     );
 }
 
