@@ -3,3 +3,9 @@
 @import "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 @source "./**/*.{html,js,jsx,ts,tsx}";
+
+
+body {
+    font-family: "Inter", sans-serif;
+    line-height: 1.5;
+}
