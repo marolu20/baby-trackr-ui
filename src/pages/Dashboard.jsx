@@ -8,7 +8,7 @@ function Dashboard() {
 
     useEffect(() => {
         async function loadDashboard() {
-            const data = await getDashboard(11)
+            const data = await getDashboard(4)
             console.log(data)
             setDashboard(data)
         }

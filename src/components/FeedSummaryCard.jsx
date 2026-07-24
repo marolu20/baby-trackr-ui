@@ -16,7 +16,7 @@ export function FeedSummaryCard({
                 </p>
             ) : (
                 <>
-                    <p>{feed.totalFeedings} feedings</p>
+                    <p>{feed.totalFeedings} Feedings</p>
                     <p>{feed.totalOunces} oz</p>
                 </>
             )}
