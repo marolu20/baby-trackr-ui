@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ENDPOINTS } from "../config/endpoints.js"
 import { BabyFormModal } from "../components/modals/BabyFormModal.jsx"
 import {formatDate, formatDateWithHoursMinutes} from "../utils/dateUtils.js";
-import EmptyPageState from "../components/EmptyPageState"
+import EmptyBabyState from "../components/EmptyBabyState"
 
 export function BabyListPage() {
 
@@ -37,7 +37,7 @@ export function BabyListPage() {
     if (babies.length === 0) {
         return (
             <>
-                <EmptyPageState
+                <EmptyBabyState
                     onCreateClick={() => setCreateOpen(true)}
                 />
                 <BabyFormModal

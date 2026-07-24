@@ -2,7 +2,7 @@
     import { useParams } from "react-router-dom"
     import getBaby from "../api/BabyApi";
     import BabyProfile from "../pages/BabyProfile.jsx"
-    import EmptyPageState from "../components/EmptyPageState.jsx"
+    import EmptyBabyState from "../components/EmptyBabyState.jsx"
     import BabyFormModal from "../components/modals/BabyFormModal.jsx"
     import { Spinner } from "flowbite-react";
     
@@ -35,7 +35,7 @@
         if (!hasBaby) {
             return (
                 <>
-                <EmptyPageState
+                <EmptyBabyState
                     onCreateClick={()=> setCreateOpen(true)}
                 />
                 <BabyFormModal
