@@ -7,7 +7,7 @@ import { DiaperForm } from "./eventForms/DiaperForm.jsx";
 import { ENDPOINTS } from "../../config/endpoints.js"
 import { USER_ID } from "../../config/api.js"
 
-export function EventFormModal({activeBaby, open, onClose}) {
+export function EventFormModal({activeBaby, open, onClose, onEventCreated}) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [step, setStep] = useState(1);
     const [eventType, setEventType] = useState(null)
@@ -53,10 +53,7 @@ export function EventFormModal({activeBaby, open, onClose}) {
         }
 
         setIsSubmitting(true);
-        console.log("Request being sent", request)
-        console.log("Request stringified",JSON.stringify
-            (request,null, 2)
-        )
+
         try {
             const response = await fetch(
                 ENDPOINTS.events(activeBaby.id), {
@@ -70,11 +67,20 @@ export function EventFormModal({activeBaby, open, onClose}) {
             if (!response.ok) {
                 throw new Error(await response.text());
             }
-            onClose();
+
+            if (onEventCreated) {
+                await onEventCreated();
+            }
+
+            console.log("Dispatching refreshDashboardData");
+            window.dispatchEvent(new Event("refreshDashboardData"));
+
+
             setStep(1);
             setEventType(null);
+            onClose();
         } catch (error) {
-            console.error(error);
+            console.error("Failed to save session:", error);
         } finally {
             setIsSubmitting(false);
         }
@@ -85,47 +91,44 @@ export function EventFormModal({activeBaby, open, onClose}) {
     }, [activeBaby])
 
     return(
-        <Modal show={open} size="md" onClose={onClose} popup>
-            <>
-                <Modal show={open} size="md" popup onClose={onClose}>
-                    <ModalHeader />
-                    <ModalBody>
-                        { step === 1 && (
-                            <EventTypeSelector
-                                eventType={eventType}
-                                setEventType={setEventType}
-                                onContinue={() => setStep(2)}
-                                onCancel={onClose}
-                            />
-                        )}
+        <Modal show={open} size="md" popup onClose={onClose}>
+            <ModalHeader />
+            <ModalBody>
+                { step === 1 && (
+                    <EventTypeSelector
+                        eventType={eventType}
+                        setEventType={setEventType}
+                        onContinue={() => setStep(2)}
+                        onCancel={onClose}
+                    />
+                )}
 
-                        { step === 2 && eventType === "FEEDING" && (
-                            <FeedingForm
-                                onSave={handleSave}
-                                isSubmitting={isSubmitting}
-                                setStep={setStep}
-                            />
-                        )}
+                { step === 2 && eventType === "FEEDING" && (
+                    <FeedingForm
+                        onSave={handleSave}
+                        isSubmitting={isSubmitting}
+                        setStep={setStep}
+                    />
+                )}
 
-                        { step === 2 && eventType === "SLEEP" && (
-                            <SleepForm
-                                onSave={handleSave}
-                                isSubmitting={isSubmitting}
-                                setStep={setStep}
-                            />
-                        )}
+                { step === 2 && eventType === "SLEEP" && (
+                    <SleepForm
+                        onSave={handleSave}
+                        isSubmitting={isSubmitting}
+                        setStep={setStep}
+                    />
+                )}
 
-                        { step === 2 && eventType === "DIAPER" && (
-                            <DiaperForm
-                                onSave={handleSave}
-                                isSubmitting={isSubmitting}
-                                setStep={setStep}
-                            />
-                        )}
-                    </ModalBody>
-                </Modal>
-            </>
+                { step === 2 && eventType === "DIAPER" && (
+                    <DiaperForm
+                        onSave={handleSave}
+                        isSubmitting={isSubmitting}
+                        setStep={setStep}
+                    />
+                )}
+            </ModalBody>
         </Modal>
+
     );
 }
 

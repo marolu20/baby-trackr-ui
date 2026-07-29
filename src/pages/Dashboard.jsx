@@ -9,13 +9,28 @@ function Dashboard() {
     const { id } = useParams()
     const [ dashboard, setDashboard ] = useState(null);
 
-    useEffect(() => {
-        async function loadDashboard() {
+    async function loadDashboard() {
+        console.log("Loading Dashboard")
+        try {
             const data = await getDashboard(id);
-            setDashboard(data)
+            setDashboard(data);
+        } catch (error) {
+            console.error("Dashboard fetch error:", error);
+        }
+    }
+
+    useEffect(() => {
+        loadDashboard();
+
+        function handleRefresh() {
+            setTimeout(() => {
+                loadDashboard();
+            }, 5000);
         }
 
-        loadDashboard();
+        window.addEventListener("refreshDashboardData", handleRefresh);
+
+        return () => window.removeEventListener("refreshDashboardData", handleRefresh);
     }, [id]);
 
     if (!dashboard) {
