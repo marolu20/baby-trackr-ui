@@ -14,7 +14,7 @@ export function DashboardGrid({dashboard}) {
                         Today's Summary
                     </h1>
                     <p className="mt-1 text-sm font-medium text-gray-500">
-                        {formatDateWithWeekday(dashboard.date)}
+                        {dashboard?.date ? formatDateWithWeekday(dashboard.date) : "Loading..."}
                     </p>
                 </div>
             </div>
