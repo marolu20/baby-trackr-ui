@@ -35,4 +35,4 @@ export function EmptyBabyState({onCreateClick}) {
     );
 }
 
-export default EmptyPageState;
+export default EmptyBabyState;

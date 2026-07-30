@@ -16,7 +16,7 @@ function App() {
             <Routes>
                 <Route path ="/" element={<RootLayout />}>
                     <Route index element={<Navigate to="/dashboard" replace />} />
-                    <Route path ="dashboard" element={<Dashboard />} />
+                    <Route path ="dashboard/:id" element={<Dashboard />} />
                     <Route path ="babies" element={<BabyListPage />} />
                     <Route path ="/babies/:id" element={<Baby />} />
                 </Route>
