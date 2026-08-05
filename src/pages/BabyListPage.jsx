@@ -17,7 +17,7 @@ export function BabyListPage() {
         try {
             const response = await fetch(`${ENDPOINTS.babies}/babies`)
             if (!response.ok) {
-                throw new Error("No babies found")
+                throw new Error("No babies found");
             }
             const data = await response.json();
             setBabies(Array.isArray(data) ? data : data.babies ?? []);

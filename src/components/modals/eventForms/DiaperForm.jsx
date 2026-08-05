@@ -2,11 +2,10 @@ import { Radio, Button, Label, TextInput, Textarea } from "flowbite-react"
 import { useState, useEffect } from "react"
 import DateTimeSelector from "../../DateTimePicker.jsx";
 
-export function DiaperForm({ onSave, isSubmitting, setStep }) {
-    const [amount, setAmount] = useState('');
-    const [notes, setNotes] = useState('');
-    const [eventTime, setEventTime ] = useState('');
-    const [diaperType, setDiaperType] = useState(null);
+export function DiaperForm({ initialValues, onSave, isSubmitting, setStep, showBackButton, onCancelEdit  }) {
+    const [diaperType, setDiaperType] = useState(initialValues?.diaperType ?? "");
+    const [notes, setNotes] = useState(initialValues?.notes ?? "");
+    const [eventTime, setEventTime ] = useState(initialValues?.eventTime ?? new Date());
 
     const handleSave = (e) => {
         e.preventDefault();
@@ -98,6 +97,7 @@ export function DiaperForm({ onSave, isSubmitting, setStep }) {
                     {isSubmitting ? 'Saving...' : 'Save'}
                 </Button>
 
+                {showBackButton && (
                 <Button
                     type="button"
                     color="gray"
@@ -106,6 +106,13 @@ export function DiaperForm({ onSave, isSubmitting, setStep }) {
                 >
                     Back
                 </Button>
+                )}
+
+                {onCancelEdit && (
+                    <Button color="gray" type="button" onClick={onCancelEdit} disabled={isSubmitting}>
+                        Cancel
+                    </Button>
+                )}
             </div>
         </form>
     );
