@@ -6,7 +6,7 @@ import { SleepForm } from "./eventForms/SleepForm.jsx";
 import { DiaperForm } from "./eventForms/DiaperForm.jsx";
 import { ENDPOINTS } from "../../config/endpoints.js"
 
-export function EventFormModal({mode = "create", babyId, event = null, open, onClose, onEventCreated, onSaved}) {
+export function EventFormModal({mode = "create", babyId, event = null, open, onClose, onSaved}) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [step, setStep] = useState(1);
     const [eventType, setEventType] = useState(null)
@@ -112,11 +112,6 @@ export function EventFormModal({mode = "create", babyId, event = null, open, onC
                 throw new Error(await response.text());
             }
 
-            if (onEventCreated) {
-                await onEventCreated();
-            }
-
-            if (onEventCreated) await onEventCreated();
             if (onSaved) await onSaved();
 
             console.log("Dispatching refreshDashboardData");

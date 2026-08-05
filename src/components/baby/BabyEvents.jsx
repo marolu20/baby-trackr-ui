@@ -30,6 +30,8 @@ export function BabyEvents({babyId, onEdit, onDelete}) {
     const [editOpen, setEditOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
+    const [ sortOrder, setSortOrder ] = useState("desc");
+
     const EVENT_NAME_MAP = {
         "FEED": "Feeding",
         "SLEEP": "Sleep & Naps",
@@ -100,6 +102,10 @@ export function BabyEvents({babyId, onEdit, onDelete}) {
         }
     }
 
+    function toggleSortOrder() {
+        setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"));
+    }
+
     if (loading) return <div className="p-6 text-center text-sm text-gray-500">Loading events...</div>;
 
     if (events.length === 0) {
@@ -118,6 +124,12 @@ export function BabyEvents({babyId, onEdit, onDelete}) {
             </>
         );
     }
+
+    const sortedEvents = [...events].sort((a, b) => {
+        const timeA = new Date(a.payload?.eventTime || a.payload?.startTime || 0);
+        const timeB = new Date(b.payload?.eventTime || b.payload?.startTime || 0);
+        return sortOrder === "desc" ? timeB - timeA : timeA - timeB;
+    });
 
     function toTitleCase(str) {
         if (!str) return "";
@@ -161,20 +173,23 @@ export function BabyEvents({babyId, onEdit, onDelete}) {
                         <TableRow className="border-b border-gray-100 dark:border-gray-800">
                             <TableHeadCell className="px-6 py-4">Event</TableHeadCell>
                             <TableHeadCell className="px-6 py-4">Details</TableHeadCell>
-                            <TableHeadCell className="px-6 py-4">Date</TableHeadCell>
+                            <TableHeadCell className="px-6 py-4">
+                                <button
+                                    onClick={toggleSortOrder}
+                                    className="flex items-center gap-1 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none"
+                                >
+                                    Date {sortOrder === "desc" ? "↓" : "↑"}
+                                </button>
+                            </TableHeadCell>
                             <TableHeadCell className="px-6 py-4">Notes</TableHeadCell>
                             <TableHeadCell className="px-6 py-4">
                                 <span className="sr-only">Actions</span>
                             </TableHeadCell>
                         </TableRow>
                     </TableHead>
-
                     <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-                        {events.map((event) => (
-                            <TableRow
-                                key={event.id}
-                                className="bg-white transition-colors duration-150 hover:bg-gray-50/50 dark:bg-gray-900 dark:hover:bg-gray-800/50"
-                            >
+                        {sortedEvents.map((event) => (
+                            <TableRow key={event.id} className="bg-white transition-colors duration-150 hover:bg-gray-50/50 dark:bg-gray-900 dark:hover:bg-gray-800/50" >
                                 <TableCell className="whitespace-nowrap px-6 py-4 font-semibold text-gray-900 dark:text-white">
                                     {transformEventName(event.eventType)}
                                 </TableCell>
@@ -193,16 +208,10 @@ export function BabyEvents({babyId, onEdit, onDelete}) {
                                 </TableCell>
                                 <TableCell className="whitespace-nowrap px-6 py-4 text-right">
                                     <div className="flex justify-end items-center gap-2">
-                                        <button
-                                            onClick={() => triggerEditFlow(event)}
-                                            className="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700"
-                                        >
+                                        <button onClick={() => triggerEditFlow(event)} className="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-gray-700" >
                                             Edit
                                         </button>
-                                        <button
-                                            onClick={() => triggerDeleteConfirmation(event.id)}
-                                            className="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100/80 transition-colors dark:text-red-400 dark:bg-red-500/10 dark:hover:bg-red-500/20"
-                                        >
+                                        <button onClick={() => triggerDeleteConfirmation(event.id)} className="inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100/80 transition-colors dark:text-red-400 dark:bg-red-500/10 dark:hover:bg-red-500/20" >
                                             Delete
                                         </button>
                                     </div>
@@ -213,7 +222,7 @@ export function BabyEvents({babyId, onEdit, onDelete}) {
                 </Table>
             </div>
 
-        <DeleteEventModal show={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} eventId={selectedEventId} onSubmit={deleteEvent} />
+            <DeleteEventModal show={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} eventId={selectedEventId} onSubmit={deleteEvent} />
             <EventFormModal mode="create" babyId={babyId} open={createOpen} onClose={() => setCreateOpen(false)} onSaved={loadEvents} />
             {editOpen && (
                 <EventFormModal mode="edit" babyId={babyId} event={selectedEvent} open={editOpen} onClose={() => { setEditOpen(false); setSelectedEvent(null); }} onSaved={() => loadEvents()} />

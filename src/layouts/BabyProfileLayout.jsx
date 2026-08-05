@@ -9,7 +9,7 @@ import DashboardGrid from "../layouts/DashboardGrid.jsx"
 function BabyProfileLayout({baby, loadBaby, dashboard, loadDashboard}) {
     return (
         <Tabs aria-label="Tabs with underline" variant="underline">
-            <TabItem active title="Overview" icon={MdDashboard}>
+            <TabItem active title="Summary" icon={MdDashboard}>
                 <DashboardGrid dashboard={dashboard}/>
             </TabItem>
             <TabItem title="Profile" icon={HiUserCircle}>
