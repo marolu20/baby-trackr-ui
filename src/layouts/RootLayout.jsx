@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, matchPath } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { AppNavigationBar } from "../components/AppNavigationBar.jsx";
 import { AppSideBar } from "../components/AppSideBar";
@@ -7,9 +7,8 @@ import {ENDPOINTS} from "../config/endpoints.js";
 
 function RootLayout() {
     const [ eventModalOpen, setEventModalOpen ] = useState(false)
-    const [ activeBaby, setActiveBaby ] = useState(null)
-    const [ babies, setBabies] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [ loading, setLoading ] = useState(true);
+    const location = useLocation()
 
     async function loadBabies() {
         try {
@@ -24,10 +23,6 @@ function RootLayout() {
 
             setBabies(babyList)
 
-            if (babyList.length > 0 && !activeBaby) {
-                setActiveBaby(babyList[0]);
-            }
-
         } catch(error) {
             console.error(error)
         } finally {
@@ -35,22 +30,30 @@ function RootLayout() {
         }
     }
 
+    const [ babies, setBabies ] = useState([]);
+
+    const match =
+        matchPath("/babies/:id", location.pathname) ||
+        matchPath("/dashboard/:id", location.pathname);
+
+    const currentBabyId = Number(match?.params?.id);
+    const currentBaby = babies.find(b => b.id === currentBabyId)
+
     useEffect(() => {
         loadBabies();
     }, []);
 
     useEffect(() => {
-        console.log("Active Baby Changed:", activeBaby);
-    }, [activeBaby])
+        console.log("Current Baby:", currentBaby);
+    }, [currentBaby])
 
     return (
         <div className="flex h-screen">
             <AppSideBar />
                 <div className="flex flex-col flex-1">
                     <AppNavigationBar
-                        activeBaby={activeBaby}
+                        currentBaby={currentBaby}
                         babies={babies}
-                        setActiveBaby={setActiveBaby}
                         onLogEvent={() => setEventModalOpen(true)}
                     />
                     <main className="flex-1 p-6 overflow-auto">
@@ -59,7 +62,7 @@ function RootLayout() {
                     <EventFormModal
                         open={eventModalOpen}
                         onClose={() => setEventModalOpen(false)}
-                        activeBaby={activeBaby}
+                        babyId={currentBaby?.id}
                     />
                 </div>
         </div>

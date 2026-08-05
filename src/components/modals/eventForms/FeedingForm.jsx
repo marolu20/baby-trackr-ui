@@ -2,10 +2,10 @@ import { Radio, Button, Label, TextInput, Textarea } from "flowbite-react"
 import { useState, useEffect } from "react"
 import DateTimeSelector from "../../DateTimePicker.jsx";
 
-export function FeedingForm({ onSave, isSubmitting, setStep }) {
-    const [amount, setAmount] = useState('');
-    const [notes, setNotes] = useState('');
-    const [eventTime, setEventTime ] = useState(new Date())
+export function FeedingForm({ initialValues, onSave, isSubmitting, setStep, showBackButton, onCancelEdit  }) {
+    const [amount, setAmount] = useState(initialValues?.amount ?? "");
+    const [notes, setNotes] = useState(initialValues?.notes ?? "");
+    const [eventTime, setEventTime ] = useState(initialValues?.eventTime ?? new Date())
 
     const handleSave = (e) => {
         e.preventDefault();
@@ -72,15 +72,22 @@ export function FeedingForm({ onSave, isSubmitting, setStep }) {
                 >
                     {isSubmitting ? 'Saving...' : 'Save'}
                 </Button>
+                {showBackButton && (
+                    <Button
+                        type="button"
+                        color="gray"
+                        onClick={() => setStep(1)}
+                        className="w-full"
+                    >
+                        Back
+                    </Button>
+                )}
 
-                <Button
-                    type="button"
-                    color="gray"
-                    onClick={() => setStep(1)}
-                    className="w-full"
-                >
-                    Back
-                </Button>
+                {onCancelEdit && (
+                    <Button color="gray" type="button" onClick={onCancelEdit} disabled={isSubmitting}>
+                        Cancel
+                    </Button>
+                )}
             </div>
         </form>
     );

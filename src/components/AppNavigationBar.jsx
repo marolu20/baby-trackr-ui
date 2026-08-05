@@ -1,8 +1,10 @@
-import { Navbar, Dropdown, Button } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
+import { Navbar, Dropdown, Button, DropdownDivider, DropdownItem } from "flowbite-react";
 import { HiPlus, HiOutlineBell, HiChevronDown } from "react-icons/hi";
 import { LuBaby } from "react-icons/lu";
 
-export function AppNavigationBar({ babies, activeBaby, setActiveBaby, onLogEvent }) {
+export function AppNavigationBar({ babies, currentBaby, onLogEvent }) {
+    const navigate = useNavigate();
     return (
         <Navbar fluid className="bg-white border-b border-gray-100 shadow-sm px-6 py-3">
 
@@ -11,7 +13,7 @@ export function AppNavigationBar({ babies, activeBaby, setActiveBaby, onLogEvent
                     label={
                         <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 bg-slate-50 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
                             <LuBaby className="h-4 w-4 text-blue-600" />
-                            <span>Current Child: {activeBaby?.firstName || "Select Child"}</span>
+                            <span>Current Child: {currentBaby?.firstName || "Select Child"}</span>
                             <HiChevronDown className="h-4 w-4 text-gray-400" />
                         </div>
                     }
@@ -22,15 +24,20 @@ export function AppNavigationBar({ babies, activeBaby, setActiveBaby, onLogEvent
                         <div
                             key={baby.id}
                             className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                            onClick={() => setActiveBaby(baby)}
+                            onClick={() => navigate(`/babies/${baby.id}`)}
                         >
                             {baby.firstName}
                         </div>
 
                     ))}
-                    {/*    /!*<Dropdown.Divider />*!/*/}
-                    {/*    /!*<Dropdown.Item className="text-blue-600 font-medium">+ Add New Baby</Dropdown.Item>*!/*/}
-
+                    <DropdownDivider />
+                        <DropdownItem
+                            //onClick={onAddBaby}
+                            className="text-blue-600 font-medium hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                        >
+                            + Add New Baby
+                        </DropdownItem>
+                    <DropdownDivider />
                 </Dropdown>
             </div>
 

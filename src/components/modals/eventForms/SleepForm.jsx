@@ -2,9 +2,11 @@ import { Radio, Button, Label, TextInput, Textarea } from "flowbite-react"
 import { useState, useEffect } from "react"
 import { DateTimeRangePicker } from "../../../components/DateTimeRangePicker.jsx"
 
-export function SleepForm({ onSave, isSubmitting, setStep }) {
-    const [amount, setAmount] = useState('');
-    const [notes, setNotes] = useState('');
+export function SleepForm({ initialValues, onSave, isSubmitting, setStep, showBackButton, onCancelEdit  }) {
+    const [amount, setAmount] = useState(initialValues?.amount ?? "");
+    const [notes, setNotes] = useState(initialValues?.notes ?? "");
+    const [startTime, setStartTime] = useState(initialValues?.startTime ?? "");
+    const [endTime, setEndTime] = useState(initialValues?.endTime ?? "");
 
     const [selectedDates, setSelectedDates] = useState({ start: new Date(), end: new Date() });
 
@@ -74,15 +76,22 @@ export function SleepForm({ onSave, isSubmitting, setStep }) {
                 >
                     {isSubmitting ? 'Saving...' : 'Save'}
                 </Button>
+                {showBackButton && (
+                    <Button
+                        type="button"
+                        color="gray"
+                        onClick={() => setStep(1)}
+                        className="w-full"
+                    >
+                        Back
+                    </Button>
+                )}
 
-                <Button
-                    type="button"
-                    color="gray"
-                    onClick={() => setStep(1)}
-                    className="w-full"
-                >
-                    Back
-                </Button>
+                {onCancelEdit && (
+                    <Button color="gray" type="button" onClick={onCancelEdit} disabled={isSubmitting}>
+                        Cancel
+                    </Button>
+                )}
             </div>
         </form>
     );
