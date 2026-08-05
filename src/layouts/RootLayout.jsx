@@ -59,7 +59,7 @@ function RootLayout() {
                     <EventFormModal
                         open={eventModalOpen}
                         onClose={() => setEventModalOpen(false)}
-                        activeBaby={activeBaby}
+                        babyId={activeBaby?.id}
                     />
                 </div>
         </div>
