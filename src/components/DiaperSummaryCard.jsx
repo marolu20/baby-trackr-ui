@@ -5,8 +5,10 @@ export function DiaperSummaryCard({
     diaper
 }) {
     return(
-        <div className="rounded-xl  min-h-56 bg-white shadow-sm border border-gray-200 p-6 text-center">
-            <TbDiaper className="mx-auto h-8 w-8 text-center text-emerald-500"></TbDiaper >
+        <div className="rounded-xl min-h-56 bg-white shadow-sm border border-gray-200 p-6 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
+                <TbDiaper className="h-10 w-10 text-emerald-500" />
+            </div>
             <h2 className="text-lg text-gray-700 pb-5 hover:text-blue-600 font-semibold">
                 {title}
             </h2>
