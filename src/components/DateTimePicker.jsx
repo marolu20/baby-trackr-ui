@@ -24,7 +24,6 @@ export function DateTimeSelector({ value, onChange }) {
         const [hours, minutes] = finalTimeStr.split(":").map(Number);
         updated.setHours(hours, minutes, 0, 0);
 
-        // Prevent future drifting if today is picked
         if (updated > now) {
             onChange(now);
         } else {

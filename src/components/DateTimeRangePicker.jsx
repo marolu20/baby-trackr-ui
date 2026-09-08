@@ -1,42 +1,73 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Label, Datepicker } from 'flowbite-react';
 import { HiOutlineClock } from 'react-icons/hi';
 
-export function DateTimeRangePicker({ onDateTimeChange }) {
-    const [startDate, setStartDate] = useState(new Date()); // Defaults to exactly right now
-    const [endDate, setEndDate] = useState(() => {
-        const oneHourLater = new Date();
-        oneHourLater.setHours(oneHourLater.getHours() + 1);
-        return oneHourLater;
-    });
+export function DateTimeRangePicker({
+    initialStartDate,
+    initialEndDate,
+    onDateTimeChange
+}) {
+    const [startDate, setStartDate] = useState(
+        initialStartDate ?? new Date()
+    );
+
+    const [endDate, setEndDate] = useState(
+        initialEndDate ?? (() => {
+            const oneHourLater = new Date();
+            oneHourLater.setHours(oneHourLater.getHours() + 1);
+            return oneHourLater;
+        })()
+    )
 
     const formatTimeToString = (dateObj) => {
         return dateObj.toTimeString().slice(0, 5);
     };
 
-    const handleStartUpdate = (newDate, newTimeStr) => {
-        if (!newDate) return;
-        const updated = new Date(newDate);
-        const [hours, minutes] = (newTimeStr || "00:00").split(":").map(Number);
-        updated.setHours(hours, minutes, 0, 0);
-
-        setStartDate(updated);
-        onDateTimeChange?.({ start: updated, end: endDate });
-    };
-
     const handleEndUpdate = (newDate, newTimeStr) => {
         if (!newDate) return;
+
         const updated = new Date(newDate);
         const [hours, minutes] = (newTimeStr || "00:00").split(":").map(Number);
+
         updated.setHours(hours, minutes, 0, 0);
 
         setEndDate(updated);
-        onDateTimeChange?.({ start: startDate, end: updated });
+
+        onDateTimeChange?.({
+            start: startDate,
+            end: updated
+        });
     };
+
+    useEffect(() => {
+        if (initialStartDate) {
+            setStartDate(new Date(initialStartDate));
+        }
+
+        if (initialEndDate) {
+            setEndDate(new Date(initialEndDate));
+        }
+    }, [initialStartDate, initialEndDate]);
+
+    const handleStartUpdate = (newDate, newTimeStr) => {
+        if (!newDate) return;
+
+        const updated = new Date(newDate);
+        const [hours, minutes] = (newTimeStr || "00:00").split(":").map(Number);
+
+        updated.setHours(hours, minutes, 0, 0);
+
+        setStartDate(updated);
+
+        onDateTimeChange?.({
+            start: updated,
+            end: endDate
+        });
+    };
+
 
     return (
         <div className="w-full box-border">
-            {/* Dynamic CSS rule blocks browser's duplicate native clock arrows */}
             <style>{`
         input[type="time"]::-webkit-calendar-picker-indicator {
           background: none !important;
@@ -47,7 +78,6 @@ export function DateTimeRangePicker({ onDateTimeChange }) {
 
             <div className="flex flex-col gap-4">
 
-                {/* START DATE & TIME BLOCK */}
                 <div>
                     <Label className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5 block">
                         Start Date & Time
