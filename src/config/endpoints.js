@@ -5,4 +5,5 @@ export const ENDPOINTS = {
     babies: `${API_BASE_URL}/v1/users/${USER_ID}`,
     baby: (id) => `${API_BASE_URL}/v1/users/${USER_ID}/babies/${id}`,
     events: (id) => `${API_BASE_URL}/v1/babies/${id}/events`,
+    activity: `${API_BASE_URL}/v1/activity`,
 }
