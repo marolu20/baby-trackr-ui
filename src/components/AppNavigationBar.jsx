@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { Navbar, Dropdown, Button, DropdownDivider, DropdownItem } from "flowbite-react";
 import { HiPlus, HiOutlineBell, HiChevronDown } from "react-icons/hi";
 import { LuBaby } from "react-icons/lu";
 
-export function AppNavigationBar({ babies, currentBaby, onLogEvent }) {
-    const navigate = useNavigate();
+export function AppNavigationBar({ babies, currentBaby, onBabyChange, onLogEvent }) {
     return (
         <Navbar fluid className="bg-white border-b border-gray-100 shadow-sm px-6 py-3">
 
@@ -21,13 +19,12 @@ export function AppNavigationBar({ babies, currentBaby, onLogEvent }) {
                     arrowIcon={false}
                 >
                     {babies.map((baby) => (
-                        <div
+                        <DropdownItem
                             key={baby.id}
-                            className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                            onClick={() => navigate(`/babies/${baby.id}`)}
+                            onClick={() => onBabyChange(baby)}
                         >
                             {baby.firstName}
-                        </div>
+                        </DropdownItem>
 
                     ))}
                     <DropdownDivider />

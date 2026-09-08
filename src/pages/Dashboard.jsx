@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom"
 import {Spinner} from "flowbite-react";
 import getDashboard from "../api/dashboardApi";
 import DashboardGrid from "../layouts/DashboardGrid.jsx";
-import {ENDPOINTS} from "../config/endpoints.js";
 
 function Dashboard() {
     const { id } = useParams()
+    console.log("Dashboard component rendered, baby:", id)
     const [ dashboard, setDashboard ] = useState(null);
 
     async function loadDashboard() {
@@ -20,17 +20,23 @@ function Dashboard() {
     }
 
     useEffect(() => {
+        console.log("Dashboard listener REGISTERED")
         loadDashboard();
 
         function handleRefresh() {
-            setTimeout(() => {
-                loadDashboard();
-            }, 5000);
+            console.log("Dashboard received eventDataChanged");
+            loadDashboard();
+            // setTimeout(() => {
+            //     loadDashboard();
+            // }, 5000);
         }
 
-        window.addEventListener("refreshDashboardData", handleRefresh);
+        window.addEventListener("eventDataChanged", handleRefresh);
 
-        return () => window.removeEventListener("refreshDashboardData", handleRefresh);
+        return () => {
+            console.log("Dashboard listener REMOVED")
+            window.removeEventListener("eventDataChanged", handleRefresh);
+        }
     }, [id]);
 
     if (!dashboard) {
