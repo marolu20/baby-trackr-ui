@@ -38,7 +38,7 @@ export function DashboardGrid({dashboard}) {
                             <li key={index} className="relative flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-8">
 
                                 <div className="absolute -left-[33px] flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sm text-gray-600">
-                                    {getActivityIcon(event.eventType)}
+                                    {getActivityIcon(event)}
                                 </div>
 
                                 <div className="sm:w-28 pl-4 sm:pl-0 pt-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
