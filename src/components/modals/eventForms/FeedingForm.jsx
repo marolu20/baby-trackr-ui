@@ -1,15 +1,23 @@
 import { Radio, Button, Label, TextInput, Textarea } from "flowbite-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import DateTimeSelector from "../../DateTimePicker.jsx";
 
 export function FeedingForm({ initialValues, onSave, isSubmitting, setStep, showBackButton, onCancelEdit  }) {
     const [amount, setAmount] = useState(initialValues?.amount ?? "");
     const [notes, setNotes] = useState(initialValues?.notes ?? "");
-    const [eventTime, setEventTime ] = useState(initialValues?.eventTime ?? new Date())
+    const [eventTime, setEventTime] = useState(
+        initialValues?.eventTime
+            ? new Date(initialValues.eventTime)
+            : new Date()
+    );
 
     const handleSave = (e) => {
         e.preventDefault();
-        onSave({ amount: Number(amount), notes, eventTime });
+        onSave({
+            amount: Number(amount),
+            notes,
+            eventTime
+        });
     };
 
     return (
@@ -38,7 +46,7 @@ export function FeedingForm({ initialValues, onSave, isSubmitting, setStep, show
                     <TextInput
                         id="amountInput"
                         type="number"
-                        //step="0.5"    // Allows parents to log half ounces (e.g. 3.5 oz)
+                        step="0.5"    // Allows parents to log half ounces (e.g. 3.5 oz)
                         min="0"
                         placeholder="0"
                         required

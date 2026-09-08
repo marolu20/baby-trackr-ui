@@ -2,8 +2,6 @@ import {
     Button, Modal, ModalHeader, ModalBody} from "flowbite-react";
 import { useState, useEffect, useCallback  } from 'react';
 
-
-
 function DeleteEventModal({ show, onClose, eventId, onSubmit }) {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     return(

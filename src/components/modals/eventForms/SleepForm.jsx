@@ -1,24 +1,65 @@
 import { Radio, Button, Label, TextInput, Textarea } from "flowbite-react"
 import { useState, useEffect } from "react"
 import { DateTimeRangePicker } from "../../../components/DateTimeRangePicker.jsx"
-
-export function SleepForm({ initialValues, onSave, isSubmitting, setStep, showBackButton, onCancelEdit  }) {
+import { formatDuration } from "../../../utils/DateUtils.js"
+export function SleepForm({
+    initialValues,
+    onSave,
+    isSubmitting,
+    setStep,
+    showBackButton,
+    onCancelEdit
+}) {
     const [amount, setAmount] = useState(initialValues?.amount ?? "");
-    const [notes, setNotes] = useState(initialValues?.notes ?? "");
-    const [startTime, setStartTime] = useState(initialValues?.startTime ?? "");
-    const [endTime, setEndTime] = useState(initialValues?.endTime ?? "");
+    const [notes, setNotes] = useState(initialValues?.notes ?? "")
+    const [selectedDates, setSelectedDates] = useState({
+        start: initialValues?.startTime
+            ? new Date(initialValues.startTime)
+            : new Date(),
 
-    const [selectedDates, setSelectedDates] = useState({ start: new Date(), end: new Date() });
+        end: initialValues?.endTime
+            ? new Date(initialValues.endTime)
+            : new Date(Date.now() + 60 * 60 * 1000)
+    });
 
-    const handleSave= (e) => {
+    const isInvalidRange = selectedDates.end < selectedDates.start;
+    const durationMinutes = Math.round(
+        (selectedDates.end - selectedDates.start)/(1000 * 60)
+    );
+
+    const canSave =
+        !isInvalidRange &&
+        durationMinutes > 0 &&
+        !isSubmitting;
+
+    useEffect(() => {
+        if (!initialValues) return;
+
+        setAmount(initialValues.amount ?? "");
+        setNotes(initialValues.notes ?? "");
+
+        setSelectedDates({
+            start: initialValues.startTime
+                ? new Date(initialValues.startTime)
+                : new Date(),
+
+            end: initialValues.endTime
+                ? new Date(initialValues.endTime)
+                : new Date(Date.now() + 60 * 60 * 1000)
+        });
+    }, [initialValues]);
+
+    const handleSave = (e) => {
         e.preventDefault();
         onSave({
-            amount: Number(amount),
+            amount: durationMinutes,
             notes,
-            startTime: selectedDates.start.toISOString(),
-            endTime: selectedDates.end.toISOString()
+            eventTime: selectedDates.start,
+            startTime: selectedDates.start,
+            endTime: selectedDates.end
         });
     };
+
 
     return (
         <form
@@ -32,22 +73,29 @@ export function SleepForm({ initialValues, onSave, isSubmitting, setStep, showBa
 
             <div>
                 <DateTimeRangePicker
+                    initialStartDate={selectedDates.start}
+                    initialEndDate={selectedDates.end}
+                    onDateTimeChange={setSelectedDates}
                 />
+
+                { isInvalidRange &&
+                    <p className="mt-2 text-sm text-red-600">
+                        End date and time must be after the start date and time
+                    </p>
+                }
             </div>
 
             <div className="space-y-4 mb-6 text-left">
                 <div>
                     <Label htmlFor="amountInput" className="mb-1.5 block text-xs font-semibold text-gray-600 uppercase tracking-wider pt-4">
-                        Duration in Minutes
+                        Sleep Duration
                     </Label>
                     <TextInput
-                        id="amountInput"
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        required
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
+                        id="durationInput"
+                        type="text"
+                        value={formatDuration(durationMinutes)}
+                        readOnly
+                        disabled
                     />
                 </div>
 
@@ -71,7 +119,7 @@ export function SleepForm({ initialValues, onSave, isSubmitting, setStep, showBa
                 <Button
                     type="submit"
                     color="blue"
-                    disabled={isSubmitting || !amount}
+                    disabled={!canSave}
                     className="w-full"
                 >
                     {isSubmitting ? 'Saving...' : 'Save'}
@@ -96,4 +144,20 @@ export function SleepForm({ initialValues, onSave, isSubmitting, setStep, showBa
         </form>
     );
 }
+
+// function formatDuration(minutes) {
+//     if (minutes < 60) {
+//         return `${minutes} min`;
+//     }
+//
+//     const hours = Math.floor(minutes / 60);
+//     const remainingMinutes = minutes % 60;
+//
+//     if (remainingMinutes === 0) {
+//         return `${hours} hr`;
+//     }
+//
+//     return `${hours} hr ${remainingMinutes} min`;
+// }
+
 export default SleepForm;
