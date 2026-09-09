@@ -1,4 +1,4 @@
-import { Modal, Button, ModalHeader, ModalBody, Label, TextInput  } from "flowbite-react";
+import { Modal, ModalHeader, ModalBody } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { EventTypeSelector } from "./eventForms/EventTypeSelector.jsx";
 import { FeedingForm} from "./eventForms/FeedingForm.jsx";
@@ -6,11 +6,10 @@ import { SleepForm } from "./eventForms/SleepForm.jsx";
 import { DiaperForm } from "./eventForms/DiaperForm.jsx";
 import { ENDPOINTS } from "../../config/endpoints.js"
 
-export function EventFormModal({mode = "create", babyId, event = null, open, onClose, onSaved}) {
+export function EventFormModal({mode = "create", babyId, event = null, open, onClose}) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [step, setStep] = useState(1);
     const [eventType, setEventType] = useState(null)
-    const [eventTime, setEventTime] = useState(new Date());
 
     useEffect(() => {
         if (open) {
@@ -43,27 +42,35 @@ export function EventFormModal({mode = "create", babyId, event = null, open, onC
 
     async function handleSave(data) {
         const incomingTime = data.eventTime;
+
+        if (!data.eventTime) {
+            throw new Error("Event time is required")
+        }
+
         const finalTimestamp = incomingTime instanceof Date
             ? incomingTime.toISOString()
             : incomingTime
                 ? new Date(incomingTime).toISOString()
-                : new Date().toISOString();        const finalNotes = data.notes.trim() === '' ? null: data.notes;
+                : new Date().toISOString();
+
+        const finalNotes = data.notes.trim() === '' ? null: data.notes;
 
         let request;
         switch(eventType) {
             case "FEEDING":
                 request = {
                     eventType: "FEED",
+                    eventTime: finalTimestamp,
                     payload: {
-                        feedingAmount: parseInt(data.amount, 10),
+                        feedingAmount: parseFloat(data.amount),
                         notes: finalNotes,
-                        eventTime: finalTimestamp
                     }
                 };
                 break;
             case "SLEEP":
                 request = {
                     eventType: "SLEEP",
+                    eventTime: finalTimestamp,
                     payload: {
                         sleepDurationMin: parseInt(data.amount, 10),
                         notes: finalNotes,
@@ -75,10 +82,10 @@ export function EventFormModal({mode = "create", babyId, event = null, open, onC
             case "DIAPER":
                 request = {
                     eventType: "DIAPER",
+                    eventTime: finalTimestamp,
                     payload: {
                         diaperType: data.diaperType?.trim().toUpperCase(),
                         notes: finalNotes,
-                        eventTime: finalTimestamp
                     }
                 };
                 break;
@@ -90,8 +97,14 @@ export function EventFormModal({mode = "create", babyId, event = null, open, onC
             // Determine HTTP method and construct target API endpoint
             const isEdit = mode === "edit";
             const requestBody = isEdit
-                ? { payload: request.payload }
-                : { eventType: eventType === "FEEDING" ? "FEED" : eventType, payload: request.payload };
+                ? {
+                    payload: request.payload
+                }
+                : {
+                    eventType: request.eventType,
+                    eventTime: request.eventTime,
+                    payload: request.payload
+                };
 
 
             const url = isEdit
@@ -112,10 +125,8 @@ export function EventFormModal({mode = "create", babyId, event = null, open, onC
                 throw new Error(await response.text());
             }
 
-            if (onSaved) await onSaved();
-
-            console.log("Dispatching refreshDashboardData");
-            window.dispatchEvent(new Event("refreshDashboardData"));
+            console.log("Dispatching eventDataChanged");
+            window.dispatchEvent(new Event("eventDataChanged"));
 
             setStep(1);
             setEventType(null);

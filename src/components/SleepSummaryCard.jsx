@@ -7,7 +7,9 @@ export function SleepSummaryCard({
     }) {
     return(
         <div className="rounded-xl  min-h-56 bg-white shadow-sm border border-gray-200 p-6 text-center">
-            <GiNightSleep className="mx-auto h-8 w-8 text-indigo-500 flex justify-center items-center"></GiNightSleep >
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
+                <GiNightSleep className="h-10 w-10 text-indigo-500" />
+            </div>
             <h2 className="text-lg text-gray-700 pb-5 hover:text-blue-600 font-semibold">
                 {title}
             </h2>

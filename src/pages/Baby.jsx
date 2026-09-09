@@ -46,14 +46,15 @@ function Baby () {
         loadDashboard();
 
         function handleRefresh() {
+            console.log("Baby page received eventDataChanged")
             setTimeout(() => {
                 loadDashboard();
             }, 5000);
         }
 
-        window.addEventListener("refreshDashboardData", handleRefresh);
+        window.addEventListener("eventDataChanged", handleRefresh);
 
-        return () => window.removeEventListener("refreshDashboardData", handleRefresh);
+        return () => window.removeEventListener("eventDataChanged", handleRefresh);
     }, [id]);
 
     if (!hasBaby) {

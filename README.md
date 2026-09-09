@@ -1,16 +1,56 @@
-# React + Vite
+# Baby Tracker MVP (v1.0.0)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight, modern web application designed for parents and caregivers to seamlessly track and manage baby profiles and daily essential events (feedings, sleep cycles, and diaper changes).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Key Features
 
-## React Compiler
+* **Baby Profile Management**: Add, update, and switch between baby tracking profiles.
+* **Activity Event Logging**: Easily record specific baby activities with customized metadata:
+  * Feeding: Track liquid amounts in ounces.
+  * Sleep & Naps: Track duration in minutes.
+  * Diaper Changes: Log types (Wet, Dirty, Mixed) converted cleanly to title case.
+* **Interactive History Table**: A clean, dashboard view powered by Flowbite-React featuring:
+    * Live data syncing using event listeners (`refreshDashboardData`).
+    * ⏳ **Chronological Date Sorting** to quickly toggle between newest and oldest events first.
+    * Inline **Edit** and **Delete** control loops with confirmation overlays.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* **Frontend**: React (Hooks, Context, `useCallback`)
+* **Styling & UI**: Tailwind CSS & [Flowbite React](https://flowbite-react.com)
+* **Utilities**: Custom Date formatting libraries for consistent locale presentation.
+
+---
+
+## Getting Started
+
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org) installed on your machine.
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com
+   cd YOUR_REPO_NAME
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment / Endpoints**
+   Ensure your API configuration path at `src/config/endpoints.js` points to your active backend server instance.
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:5173](http://localhost:5173) (or your local Vite/CRA port) in your browser.
+
+---

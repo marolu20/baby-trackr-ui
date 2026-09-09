@@ -48,41 +48,10 @@ export function AppSideBar() {
                         <span>Babies</span>
                     </Link>
 
-                    <div className="w-full">
-                        <button
-                            onClick={() => setIsActivityOpen(!isActivityOpen)}
-                            className="flex items-center justify-between gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 w-full text-left transition-all duration-200"
-                        >
-                            <div className="flex items-center gap-3">
-                                <HiDocumentReport className="h-5 w-5 opacity-80" />
-                                <span>Activity Logs</span>
-                            </div>
-                            {isActivityOpen ? <HiChevronUp className="h-4 w-4" /> : <HiChevronDown className="h-4 w-4" />}
-                        </button>
-
-                        {isActivityOpen && (
-                            <div className="mt-1 ml-4 pl-4 border-l border-gray-100 space-y-1">
-                                <Link
-                                    to="/activity/feed"
-                                    className={`block px-4 py-2 text-xs font-medium rounded-md transition-colors ${currentPath === '/activity/feed' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
-                                >
-                                    🍼 Feeding Logs
-                                </Link>
-                                <Link
-                                    to="/activity/sleep"
-                                    className={`block px-4 py-2 text-xs font-medium rounded-md transition-colors ${currentPath === '/activity/sleep' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
-                                >
-                                    🌙 Sleep Logs
-                                </Link>
-                                <Link
-                                    to="/activity/diaper"
-                                    className={`block px-4 py-2 text-xs font-medium rounded-md transition-colors ${currentPath === '/activity/diaper' ? 'text-blue-600 font-semibold' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
-                                >
-                                    💩 Diaper Logs
-                                </Link>
-                            </div>
-                        )}
-                    </div>
+                    <Link to="/activity" className={getLinkClass("/activity")}>
+                        <HiDocumentReport className="h-5 w-5 opacity-80" />
+                        <span>Activity Log</span>
+                    </Link>
 
                     <Link to="/reports" className={getLinkClass("/reports")}>
                         <HiTrendingUp className="h-5 w-5 opacity-80" />
